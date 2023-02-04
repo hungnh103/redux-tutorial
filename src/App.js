@@ -1,25 +1,85 @@
-import logo from './logo.svg';
+import React from 'react'
 import './App.css';
+import { connect } from 'react-redux'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  constructor() {
+    super()
+    this.state = {}
+
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+  }
+
+  componentDidMount() {
+    console.log('rendered')
+    const url = 'https://jsonplaceholder.typicode.com/posts'
+
+    // fetch(url)
+    //   .then(response => response.json())
+    //   .then(json => {
+        // this.props.dispatch({
+        //   type: 'LOAD_POSTS',
+        //   payload: json
+        // })
+      // })
+  }
+
+  handleChange(e) {
+    this.setState({ value: e.target.value })
+  }
+
+  handleSubmit(e) {
+    e.preventDefault()
+    this.props.dispatch({
+      type: 'ADD_POST',
+      payload: { id: this.state.postId, title: this.state.value }
+    })
+
+    this.setState({ postId: this.state.postId + 1 })
+  }
+
+  render() {
+    console.log('inside render method')
+    return (
+      <div className="App">
+        <header className="App-header">
+          <form onSubmit={this.handleSubmit}>
+            <input
+              type="text"
+              value={this.state.value}
+              onChange={this.handleChange}
+            />
+            <input
+              type="submit"
+              value='Submit'
+            />
+          </form>
+
+          <ul>
+            {/*{this.props.posts.map(post => (
+              <li key={post.id}>{post.title}</li>
+            ))}*/}
+          </ul>
+        </header>
+      </div>
+    )
+  }
 }
 
-export default App;
+const mapStateToProps = state => {
+  return { posts: state.posts }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    dispatch
+  }
+}
+
+// export default connect(
+//   mapStateToProps,
+//   mapDispatchToProps
+// )(App)
+
+export default App
